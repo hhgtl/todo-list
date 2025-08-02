@@ -11,3 +11,13 @@ export type BaseResponse<T = {}> = {
 }
 
 export type RequestStatus = "idle" | "loading" | "succeeded" | "failed"
+
+export type LoginResponse = {
+  resultCode: number
+  messages: [] | string[],
+  fieldsErrors: [],
+  data: {
+    userId: number
+    token?: string
+  }
+}

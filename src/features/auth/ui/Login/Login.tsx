@@ -14,13 +14,12 @@ import FormGroup from "@mui/material/FormGroup"
 import FormLabel from "@mui/material/FormLabel"
 import Grid from "@mui/material/Grid2"
 import TextField from "@mui/material/TextField"
-import { Controller, type SubmitHandler, useForm, useWatch } from "react-hook-form"
+import { Controller, type SubmitHandler, useForm } from "react-hook-form"
 import styles from "./Login.module.css"
-import { Captcha } from "@/features/captcha/ui/Captcha.tsx"
-import { useState } from "react"
+import { LoginResponse } from "@/common/types"
+
 
 export const Login = () => {
-  const [refetchCaptcha, setRefetchCaptcha] = useState(false)
 
   const [login] = useLoginMutation()
   const themeMode = useAppSelector(selectThemeMode)
@@ -33,29 +32,23 @@ export const Login = () => {
     reset,
     control,
     formState: { errors },
-    setValue,
   } = useForm<Inputs>({
     resolver: zodResolver(loginSchema),
-    defaultValues: { email: "", password: "", rememberMe: false, captcha: "", needCaptcha: false },
+    defaultValues: { email: "", password: "", rememberMe: false, captcha: false},
   })
-
-  const needCaptcha = useWatch({ control, name: "needCaptcha" })
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     login(data)
       .unwrap()
-      .then((res) => {
+      .then((res: LoginResponse) => {
         if (res.resultCode === ResultCode.Success) {
           dispatch(setIsLoggedInAC({ isLoggedIn: true }))
           localStorage.setItem(AUTH_TOKEN, res.data.token)
           reset()
         }
       })
-      .catch((err) => {
-        if (err.resultCode === ResultCode.CaptchaError) {
-          setValue("needCaptcha", true)
-          setRefetchCaptcha((prev) => !prev)
-        }
+      .catch((err: LoginResponse) => {
+        console.error(err)
       })
   }
 
@@ -106,23 +99,6 @@ export const Login = () => {
                 />
               }
             />
-
-            {needCaptcha && (
-              <Captcha
-                refetchCaptcha={refetchCaptcha}
-                sx={{
-                  width: "250px",
-                  "& .MuiInputBase-input": {
-                    padding: "10px",
-                  },
-                }}
-                margin="normal"
-                error={!!errors.captcha}
-                {...register("captcha")}
-              />
-            )}
-            {errors.captcha && <span className={styles.errorMessage}>{errors.captcha.message}</span>}
-
             <Button type="submit" variant="contained" color="primary">
               Login
             </Button>
