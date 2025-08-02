@@ -9,7 +9,7 @@
     "test": "vitest",
     "preview": "vite preview",
     "deploy": "gh-pages -d dist",
-    "predeploy": "pnpm ren build"
+    "predeploy": "pnpm run build"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",
