@@ -11,11 +11,13 @@ import CssBaseline from "@mui/material/CssBaseline"
 import { ThemeProvider } from "@mui/material/styles"
 import { useEffect, useState } from "react"
 import styles from "./App.module.css"
+import { useNavigate } from "react-router"
 
 export const App = () => {
   const [isInitialized, setIsInitialized] = useState(false)
 
   const themeMode = useAppSelector(selectThemeMode)
+  const navigate = useNavigate();
 
   const { data, isLoading } = useMeQuery()
 
@@ -28,6 +30,8 @@ export const App = () => {
     setIsInitialized(true)
     if (data?.resultCode === ResultCode.Success) {
       dispatch(setIsLoggedInAC({ isLoggedIn: true }))
+    } else {
+      navigate('/login', { replace: true });
     }
   }, [isLoading])
 
