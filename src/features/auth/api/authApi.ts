@@ -1,13 +1,13 @@
 import { baseApi } from "@/app/baseApi"
 import type { BaseResponse } from "@/common/types"
-import type { LoginArgs } from "./authApi.types"
+import type { Inputs } from "@/features/auth/lib/schemas"
 
 export const authApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     me: build.query<BaseResponse<{ id: number; email: string; login: string }>, void>({
       query: () => "auth/me",
     }),
-    login: build.mutation<BaseResponse<{ userId: number; token: string }>, LoginArgs>({
+    login: build.mutation<BaseResponse<{ userId: number; token: string }>, Inputs>({
       query: (body) => ({
         url: "auth/login",
         method: "POST",
@@ -26,4 +26,4 @@ export const authApi = baseApi.injectEndpoints({
   }),
 })
 
-export const { useMeQuery, useLoginMutation, useLogoutMutation, useGetCaptchaQuery } = authApi
+export const { useMeQuery, useLoginMutation, useLogoutMutation } = authApi

@@ -16,8 +16,6 @@ import Grid from "@mui/material/Grid2"
 import TextField from "@mui/material/TextField"
 import { Controller, type SubmitHandler, useForm } from "react-hook-form"
 import styles from "./Login.module.css"
-import { LoginResponse } from "@/common/types"
-
 
 export const Login = () => {
 
